@@ -1,0 +1,442 @@
+{
+ "ELEVATE": {
+  "l": "/logos/elevate.png",
+  "id": "18622"
+ },
+ "Arashi": {
+  "l": "/logos/arashi.png",
+  "id": "23180"
+ },
+ "Contra": {
+  "l": "/logos/contra.png",
+  "id": "10376"
+ },
+ "FUEGO": {
+  "l": "/logos/fuego.png",
+  "id": "17252"
+ },
+ "counterfeit": {
+  "l": "/logos/counterfeit.png",
+  "id": "23815"
+ },
+ "FlyQuest": {
+  "l": "/logos/flyquest.png",
+  "id": "21838"
+ },
+ "Wildcard": {
+  "l": "/logos/wildcard.png",
+  "id": "23975"
+ },
+ "Winthrop University": {
+  "l": "/logos/winthrop-university.png",
+  "id": "10448"
+ },
+ "ARRANCA DREAMS": {
+  "l": "/logos/arranca-dreams.png",
+  "id": "12642"
+ },
+ "Chivas Esports": {
+  "l": "/logos/chivas-esports.png",
+  "id": "2131"
+ },
+ "Old School Kr3w": {
+  "l": "/logos/old-school-kr3w.png",
+  "id": "11720"
+ },
+ "STREAMER ARENA": {
+  "l": "/logos/streamer-arena.png",
+  "id": "21459"
+ },
+ "Maryville University": {
+  "l": "/logos/maryville-university.png",
+  "id": "12900"
+ },
+ "QoR": {
+  "l": "/logos/qor.png",
+  "id": "6985"
+ },
+ "Oafs": {
+  "l": "/logos/oafs.png",
+  "id": "23892"
+ },
+ "SaD Esports": {
+  "l": "/logos/sad-esports.png",
+  "id": "13920"
+ },
+ "University War": {
+  "l": "/logos/university-war.png",
+  "id": "20209"
+ },
+ "9z Globant": {
+  "l": "/logos/9z-globant.png",
+  "id": "367"
+ },
+ "KRÜ BLAZE": {
+  "l": "/logos/kr-blaze.png",
+  "id": "7511"
+ },
+ "Bonkers": {
+  "l": "/logos/bonkers.png",
+  "id": "7313"
+ },
+ "Finishers": {
+  "l": "/logos/finishers.png",
+  "id": "21670"
+ },
+ "REH Gaming": {
+  "l": "/logos/reh-gaming.png",
+  "id": "12949"
+ },
+ "FRG": {
+  "l": "/logos/frg.png",
+  "id": "21243"
+ },
+ "Eintracht Frankfurt Team Vision": {
+  "l": "/logos/eintracht-frankfurt-team-vision.png",
+  "id": "23294"
+ },
+ "Mix My Miks": {
+  "l": "/logos/mix-my-miks.png",
+  "id": "23069"
+ },
+ "Revenant XSpark": {
+  "l": "/logos/revenant-xspark.png",
+  "id": "17180"
+ },
+ "Kryon Esports": {
+  "l": "/logos/kryon-esports.png",
+  "id": "21594"
+ },
+ "Oasis Gaming": {
+  "l": "/logos/oasis-gaming.png",
+  "id": "3136"
+ },
+ "Shopify Rebellion Black": {
+  "l": "/logos/shopify-rebellion-black.png",
+  "id": "9353"
+ },
+ "Xora Esports": {
+  "l": "/logos/xora-esports.png",
+  "id": "16824"
+ },
+ "ENVY": {
+  "l": "/logos/envy.png",
+  "id": "427"
+ },
+ "Yellow Dragon Gaming": {
+  "l": "/logos/yellow-dragon-gaming.png",
+  "id": "23980"
+ },
+ "Xipto Esports": {
+  "l": "/logos/xipto-esports.png",
+  "id": "17167"
+ },
+ "Sharper Esports": {
+  "l": "/logos/sharper-esports.png",
+  "id": "623"
+ },
+ "BERG": {
+  "l": "/logos/berg.png",
+  "id": "23295"
+ },
+ "Glacial Guardians": {
+  "l": "/logos/glacial-guardians.png",
+  "id": "17037"
+ },
+ "Barça eSports": {
+  "l": "/logos/bar-a-esports.png",
+  "id": "14461"
+ },
+ "CGN Esports": {
+  "l": "/logos/cgn-esports.png",
+  "id": "5214"
+ },
+ "FunPlus Phoenix": {
+  "l": "/logos/funplus-phoenix.png",
+  "id": "11328"
+ },
+ "Motiv Esports": {
+  "l": "/logos/motiv-esports.png",
+  "id": "18117"
+ },
+ "Zem Nothing Syndicate": {
+  "l": "/logos/zem-nothing-syndicate.png",
+  "id": "24353"
+ },
+ "Fancy United Esports": {
+  "l": "/logos/fancy-united-esports.png",
+  "id": "4330"
+ },
+ "Original Gaming": {
+  "l": "/logos/original-gaming.png",
+  "id": "15019"
+ },
+ "NXG": {
+  "l": "/logos/nxg.png",
+  "id": "20657"
+ },
+ "F9 EICAR": {
+  "l": "/logos/f9-eicar.png",
+  "id": "18494"
+ },
+ "Aurora Gaming": {
+  "l": "/logos/aurora-gaming.png",
+  "id": "23727"
+ },
+ "Stallions Esports": {
+  "l": "/logos/stallions-esports.png",
+  "id": "18120"
+ },
+ "ALTERNATE aTTaX Ruby": {
+  "l": "/logos/alternate-attax-ruby.png",
+  "id": "11496"
+ },
+ "Sakura": {
+  "l": "/logos/sakura.png",
+  "id": "23626"
+ },
+ "Masterclass": {
+  "l": "/logos/masterclass.png",
+  "id": "23878"
+ },
+ "SEN Otters": {
+  "l": "/logos/sen-otters.png",
+  "id": "22074"
+ },
+ "Pixel Lumina": {
+  "l": "/logos/pixel-lumina.png",
+  "id": "17177"
+ },
+ "HooK Esport": {
+  "l": "/logos/hook-esport.png",
+  "id": "19166"
+ },
+ "HONK": {
+  "l": "/logos/honk.png",
+  "id": "2562"
+ },
+ "Unsettled Resentment": {
+  "l": "/logos/unsettled-resentment.png",
+  "id": "21919"
+ },
+ "Nova Esports": {
+  "l": "/logos/nova-esports.png",
+  "id": "12064"
+ },
+ "Gentle Mates GC": {
+  "l": "/logos/gentle-mates-gc.png",
+  "id": "21093"
+ },
+ "Shopify Rebellion Gold": {
+  "l": "/logos/shopify-rebellion-gold.png",
+  "id": "14278"
+ },
+ "Titan Esports Club": {
+  "l": "/logos/titan-esports-club.png",
+  "id": "14137"
+ },
+ "World Sports Invictus Gaming": {
+  "l": "/logos/world-sports-invictus-gaming.png",
+  "id": "21699"
+ },
+ "MIBR GC": {
+  "l": "/logos/mibr-gc.png",
+  "id": "8050"
+ },
+ "SK Nebula": {
+  "l": "/logos/sk-nebula.png",
+  "id": "15832"
+ },
+ "Any Questions Gaming": {
+  "l": "/logos/any-questions-gaming.png",
+  "id": "19531"
+ },
+ "Rare Atom": {
+  "l": "/logos/rare-atom.png",
+  "id": "11985"
+ },
+ "A Team": {
+  "l": "/logos/a-team.png",
+  "id": "20603"
+ },
+ "Octagonal Disposition Gaming": {
+  "l": "/logos/octagonal-disposition-gaming.png",
+  "id": "12785"
+ },
+ "G2 Gozen": {
+  "l": "/logos/g2-gozen.png",
+  "id": "6530"
+ },
+ "Team Liquid Brazil": {
+  "l": "/logos/team-liquid-brazil.png",
+  "id": "7055"
+ },
+ "Gen.G GC": {
+  "l": "/logos/gen-g-gc.png",
+  "id": "21858"
+ },
+ "FENNEL GC": {
+  "l": "/logos/fennel-gc.png",
+  "id": "9516"
+ },
+ "Fire Flux Esports": {
+  "l": "/logos/fire-flux-esports.png",
+  "id": "20085"
+ },
+ "BBL Esports": {
+  "l": "/logos/bbl-esports.png",
+  "id": "397"
+ },
+ "Eternal Fire": {
+  "l": "/logos/eternal-fire.png",
+  "id": "6392"
+ },
+ "Eintracht Frankfurt": {
+  "l": "/logos/eintracht-frankfurt.png",
+  "id": "14478"
+ },
+ "Natus Vincere Junior": {
+  "l": "/logos/natus-vincere-junior.png",
+  "id": "21715"
+ },
+ "Cloud9": {
+  "l": "/logos/cloud9.png",
+  "id": "188"
+ },
+ "YFP": {
+  "l": "/logos/yfp.png",
+  "id": "5038"
+ },
+ "Fluxo W7M": {
+  "l": "/logos/fluxo-w7m.png",
+  "id": "23141"
+ },
+ "Gamax Esports": {
+  "l": "/logos/gamax-esports.png",
+  "id": "2290"
+ },
+ "Team Solid": {
+  "l": "/logos/team-solid.png",
+  "id": "19265"
+ },
+ "WIP Esports": {
+  "l": "/logos/wip-esports.png",
+  "id": "19391"
+ },
+ "La Masia": {
+  "l": "/logos/la-masia.png",
+  "id": "18025"
+ },
+ "Ninja Turtles": {
+  "l": "/logos/ninja-turtles.png",
+  "id": "25041"
+ },
+ "Eternal Focus": {
+  "l": "/logos/eternal-focus.png",
+  "id": "14273"
+ },
+ "UNIWAY": {
+  "l": "/logos/uniway.png",
+  "id": "15837"
+ },
+ "Rain Syndicate": {
+  "l": "/logos/rain-syndicate.png",
+  "id": "23584"
+ },
+ "Frankfurt Bahnhofsviertel": {
+  "l": "/logos/frankfurt-bahnhofsviertel.png",
+  "id": "23596"
+ },
+ "Szach Mat": {
+  "l": "/logos/szach-mat.png",
+  "id": "11257"
+ },
+ "FlyQuest RED": {
+  "l": "/logos/flyquest-red.png",
+  "id": "6456"
+ },
+ "ycatble": {
+  "l": "/logos/ycatble.png",
+  "id": "22915"
+ },
+ "baboons": {
+  "l": "/logos/baboons.png",
+  "id": "16961"
+ },
+ "Division One": {
+  "l": "/logos/division-one.png",
+  "id": "21714"
+ },
+ "Fisher Esports": {
+  "l": "/logos/fisher-esports.png",
+  "id": "23461"
+ },
+ "Baker College": {
+  "l": "/logos/baker-college.png",
+  "id": "18178"
+ },
+ "Cloud9 GC": {
+  "l": "/logos/cloud9-gc.png",
+  "id": "22918"
+ },
+ "Remember The Name": {
+  "l": "/logos/remember-the-name.png",
+  "id": "23518"
+ },
+ "Team Protocol": {
+  "l": "/logos/team-protocol.png",
+  "id": "23591"
+ },
+ "BONK": {
+  "l": "/logos/bonk.png",
+  "id": "18054"
+ },
+ "FAST LEARNER": {
+  "l": "/logos/fast-learner.png",
+  "id": "19503"
+ },
+ "Enisorail": {
+  "l": "/logos/enisorail.png",
+  "id": "19477"
+ },
+ "Oxygen Gaming": {
+  "l": "/logos/oxygen-gaming.png",
+  "id": "17160"
+ },
+ "KeepBest Gaming": {
+  "l": "/logos/keepbest-gaming.png",
+  "id": "12784"
+ },
+ "Wolves Esports": {
+  "l": "/logos/wolves-esports.png",
+  "id": "13790"
+ },
+ "Victory No Limits Gaming": {
+  "l": "/logos/victory-no-limits-gaming.png",
+  "id": "23699"
+ },
+ "Nova Esports GC": {
+  "l": "/logos/nova-esports-gc.png",
+  "id": "13807"
+ },
+ "Dragon Ranger Gaming": {
+  "l": "/logos/dragon-ranger-gaming.png",
+  "id": "11981"
+ },
+ "FUT Esports": {
+  "l": "/logos/fut-esports.png",
+  "id": "1184"
+ },
+ "GIANTX": {
+  "l": "/logos/giantx.png",
+  "id": "14419"
+ },
+ "Habos Babos": {
+  "l": "/logos/habos-babos.png",
+  "id": "22114"
+ },
+ "Joblife": {
+  "l": "/logos/joblife.png",
+  "id": "11232"
+ }
+}
