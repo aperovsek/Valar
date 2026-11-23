@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    container_name: valar-app
+    ports:
+      - "3000:3000"
+    volumes:
+      # Mount data directory to persist scraped data
+      - ./data:/app/data
+      # Mount public directory for static files (optional, for development)
+      - ./public:/app/public
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - RESULT_PAGES=3
+    restart: unless-stopped
+    # For development with auto-restart on changes
+    # Uncomment below and comment the build section above for development
+    # image: node:20-alpine
+    # command: sh -c "npm install && node server.js"
+    # volumes:
+    #   - .:/app
+    #   - /app/node_modules
