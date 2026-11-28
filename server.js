@@ -59,6 +59,15 @@ async function load() {
 }
 
 const app = express();
+
+// Enable CORS for API endpoints
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Methods", "GET, OPTIONS");
+  res.header("Access-Control-Allow-Headers", "Content-Type");
+  next();
+});
+
 app.get("/api/matches", async (_req, res) => {
   try { res.json(await load()); }
   catch (e) { console.error(e); cache.data ? res.json(cache.data) : res.status(502).json({ error: String(e) }); }
@@ -66,8 +75,30 @@ app.get("/api/matches", async (_req, res) => {
 // Liquipedia data (created once by scrape-liquipedia.js); re-read automatically when the file changes
 let DB = { teams: {}, players: {}, missing: [] }, mtime = 0;
 const db = () => {
-  try { const m = fs.statSync("data/liquipedia.json").mtimeMs; if (m !== mtime) { DB = JSON.parse(fs.readFileSync("data/liquipedia.json", "utf8")); mtime = m; } } catch {}
+  try { 
+    const m = fs.statSync("data/liquipedia.json").mtimeMs; 
+    if (m !== mtime) { 
+      DB = JSON.parse(fs.readFileSync("data/liquipedia.json", "utf8")); 
+      mtime = m; 
+    } 
+  } catch (e) {
+    console.log("No liquipedia.json found, using empty database");
+  }
   return DB;
+};
+// Events data (created once by scrape-events.js); re-read automatically when the file changes
+let EV = {}, evtime = 0;
+const events = () => {
+  try { 
+    const m = fs.statSync("data/events.json").mtimeMs; 
+    if (m !== evtime) { 
+      EV = JSON.parse(fs.readFileSync("data/events.json", "utf8")); 
+      evtime = m; 
+    } 
+  } catch (e) {
+    console.log("No events.json found, using empty events database");
+  }
+  return EV;
 };
 app.get("/api/team/:name", (req, res) => {
   const d = db(), t = d.teams[req.params.name];
@@ -79,9 +110,26 @@ app.get("/api/logos", (_req, res) => {
   for (const [n, t] of Object.entries(db().teams)) if (t.logoFile) o[n] = { l: t.logoFile, d: t.logoDarkFile || "" };
   res.json(o);
 });
+app.get("/api/event-logos", (_req, res) => {
+  const o = {};
+  for (const [n, e] of Object.entries(events())) if (e.logo) o[n] = { l: e.logo };
+  res.json(o);
+});
+app.get("/api/event/:name", (req, res) => {
+  const e = events()[req.params.name];
+  e ? res.json(e) : res.status(404).json({ error: "no data" });
+});
 app.get("/api/player/:name", (req, res) => {
   const p = db().players[req.params.name];
   p ? res.json(p) : res.status(404).json({ error: "no data" });
+});
+// Serve all team data for teams page
+app.get("/api/team-data", (_req, res) => {
+  res.json(db());
+});
+// Serve all event data for events page
+app.get("/api/event-data", (_req, res) => {
+  res.json(events());
 });
 app.use(express.static("public"));
 app.listen(PORT, () => console.log(`http://localhost:${PORT}`));

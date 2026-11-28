@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Event</title>
+    <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+    <header class="header">
+        <div class="header-top">
+            <h1 id="h">Loading...</h1>
+            <div class="user-actions">
+                <button id="theme-toggle" class="theme-toggle" aria-label="Switch theme"></button>
+                <button id="login-btn" class="user-btn">Login</button>
+            </div>
+        </div>
+        <nav class="navbar">
+            <a href="/" class="nav-tab">Schedule</a>
+            <a href="teams.html" class="nav-tab">Teams</a>
+            <a href="events.html" class="nav-tab active">Events</a>
+        </nav>
+    </header>
+    <div class="wrap">
+        <main class="full-width">
+            <div id="body"><div class="card empty">Loading event data...</div></div>
+            <p class="mt-2 text-center" style="color: var(--text-muted);">Event data from <a href="https://www.vlr.gg" target="_blank" rel="noopener">vlr.gg</a>.</p>
+        </main>
+    </div>
+    <script src="js/utils.js"></script>
+    <script src="js/event.js"></script>
+</body>
+</html>

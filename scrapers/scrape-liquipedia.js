@@ -2,10 +2,11 @@
 //
 // Quick test (no server needed):  LP_UA="my-site (you@email.com)" node scrape-liquipedia.js --teams="Team Liquid,Cloud9"
 // Full import (server running):   LP_UA="my-site (you@email.com)" node scrape-liquipedia.js --limit=30
+// All teams from Liquipedia:     LP_UA="my-site (you@email.com)" node scrape-liquipedia.js --all-teams
 // Flags: --debug prints the page outline and saves the raw HTML to data/. --force re-imports teams already saved. Re-running resumes where it stopped.
 // Liquipedia API limits: action=parse 1 req / 30s, other actions 1 req / 2s.
 import fs from "node:fs";
-import { parseTeam, wikiInfobox, outline } from "./lp-parse.js";
+import { parseTeam, wikiInfobox, outline } from "../lp-parse.js";
 
 const API = "https://liquipedia.net/valorant/api.php";
 const UA = process.env.LP_UA || "match-schedule/1.0 (one-time import; contact: CHANGE-ME@example.com)";
@@ -36,7 +37,7 @@ async function resolve(name) { // vlr name -> Liquipedia title, only on a (near)
 fs.mkdirSync("data", { recursive: true });
 const db = fs.existsSync(OUT) ? JSON.parse(fs.readFileSync(OUT, "utf8")) : { teams: {}, players: {}, missing: [] };
 const slug = (n) => n.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
-async function download(url, base) { // logos are saved locally once, never hotlinked
+async function download(url, base, dir = "logos") { // logos are saved locally once, never hotlinked
   if (!url) return null;
   try {
     const wait = last + 2100 - Date.now();
@@ -45,19 +46,59 @@ async function download(url, base) { // logos are saved locally once, never hotl
     const r = await fetch(url, { headers: { "user-agent": UA } });
     if (!r.ok) throw new Error("HTTP " + r.status);
     const ext = ((new URL(url).pathname.match(/\.(png|jpe?g|svg|webp|gif)$/i) || [])[1] || "png").toLowerCase();
-    fs.mkdirSync("public/logos", { recursive: true });
-    fs.writeFileSync(`public/logos/${base}.${ext}`, Buffer.from(await r.arrayBuffer()));
-    return `/logos/${base}.${ext}`;
+    fs.mkdirSync(`public/${dir}`, { recursive: true });
+    fs.writeFileSync(`public/${dir}/${base}.${ext}`, Buffer.from(await r.arrayBuffer()));
+    return `/${dir}/${base}.${ext}`;
   } catch (e) { console.error("  logo failed:", e.message); return null; }
 }
 const save = () => fs.writeFileSync(OUT, JSON.stringify(db, null, 1));
 
 let names;
 if (arg("teams")) names = arg("teams").split(",").map((s) => s.trim()).filter(Boolean);
-else {
+else if (process.argv.includes("--all-teams")) {
+  // Get all teams from Liquipedia category
+  console.log("Fetching all teams from Liquipedia...");
+  const category = "Category:Teams";
+  let allPages = [];
+  let cmcontinue = "";
+  const apiUrl = "https://liquipedia.net/valorant/api.php";
+
+  while (true) {
+    const params = {
+      action: "query",
+      list: "categorymembers",
+      cmtitle: category,
+      cmtype: "page",
+      cmprop: "title",
+      cmlimit: "500",
+      format: "json",
+      formatversion: "2"
+    };
+    if (cmcontinue) params.cmcontinue = cmcontinue;
+
+    const r = await api(params, 2100);
+    if (r.error) {
+      console.error("Error fetching category members:", r.error);
+      break;
+    }
+
+    const pages = r.query.categorymembers || [];
+    allPages = allPages.concat(pages.map(p => p.title));
+
+    if (r.continue && r.continue.cmcontinue) {
+      cmcontinue = r.continue.cmcontinue;
+      console.log(`  Fetched ${allPages.length} teams so far...`);
+    } else {
+      break;
+    }
+  }
+
+  names = allPages.filter(n => !n.startsWith("Category:"));
+  console.log(`Found ${names.length} teams in total`);
+} else {
   let matches;
   try { matches = (await (await fetch("http://localhost:3000/api/matches")).json()).matches; }
-  catch { console.error("Could not read http://localhost:3000/api/matches. Start the server first, or pass --teams=\"Team Liquid,Cloud9\"."); process.exit(1); }
+  catch { console.error("Could not read http://localhost:3000/api/matches. Start the server first, or pass --teams=\"Team Liquid,Cloud9\" or use --all-teams."); process.exit(1); }
   const freq = {};
   matches.forEach((m) => [m.a, m.b].forEach((n) => { if (n && n !== "TBD") freq[n] = (freq[n] || 0) + 1; }));
   names = Object.keys(freq).sort((a, b) => freq[b] - freq[a]).slice(0, limit);
@@ -101,10 +142,33 @@ for (let i = 0; i < need.length; i += 50) {
     for (const req of chunk) {
       let t = req; for (let k = 0; k < 3 && alias[t]; k++) t = alias[t];
       const p = byTitle[t];
+      const playerInfo = p ? wikiInfobox(p.revisions?.[0]?.slots?.main?.content || "", "player") : {};
+
+      // Construct Liquipedia image URL (without downloading)
+      let imageUrl = null;
+      if (playerInfo.image) {
+        const filename = playerInfo.image.replace(/ /g, "_");
+        // Liquipedia Commons thumbnail URL pattern
+        const firstChar = filename[0].toUpperCase();
+        const firstTwo = filename.substring(0, 2).toUpperCase();
+        imageUrl = `https://liquipedia.net/commons/thumb/${firstChar}/${firstTwo}/${encodeURIComponent(filename)}/600px-${encodeURIComponent(filename)}`;
+      }
+
       db.players[req] = {
         title: t, url: "https://liquipedia.net/valorant/" + encodeURIComponent(t.replace(/ /g, "_")),
-        info: p ? wikiInfobox(p.revisions?.[0]?.slots?.main?.content || "", "player") : {},
+        info: playerInfo,
+        imageUrl: imageUrl,
       };
+      // Update the player in all team rosters with the imageUrl
+      Object.values(db.teams).forEach(team => {
+        if (team.players) {
+          team.players.forEach(player => {
+            if (player.page === req) {
+              player.imageUrl = imageUrl;
+            }
+          });
+        }
+      });
     }
     save();
     console.log("players:", Math.min(i + 50, need.length) + "/" + need.length);

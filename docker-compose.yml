@@ -9,12 +9,12 @@ services:
     volumes:
       # Mount data directory to persist scraped data
       - ./data:/app/data
-      # Mount public directory for static files (optional, for development)
+      # Mount public directory for static files
       - ./public:/app/public
     environment:
       - NODE_ENV=production
       - PORT=3000
-      - RESULT_PAGES=3
+      - RESULT_PAGES=5
     restart: unless-stopped
     # For development with auto-restart on changes
     # Uncomment below and comment the build section above for development

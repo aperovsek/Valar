@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>VALORANT Events</title>
+    <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+    <header class="header">
+        <div class="header-top">
+            <h1>VALORANT <small>Events</small></h1>
+            <div class="user-actions">
+                <button id="theme-toggle" class="theme-toggle" aria-label="Switch theme"></button>
+                <button id="login-btn" class="user-btn">Login</button>
+            </div>
+        </div>
+        <nav class="navbar">
+            <a href="/" class="nav-tab">Schedule</a>
+            <a href="teams.html" class="nav-tab">Teams</a>
+            <a href="events.html" class="nav-tab active">Events</a>
+        </nav>
+    </header>
+    <div class="wrap">
+        <main class="full-width">
+            <div class="page-toolbar">
+                <div class="tabs">
+                    <button id="tu" class="on">All Events</button>
+                </div>
+                <input type="search" id="search" placeholder="Search events..." class="search-input" />
+            </div>
+            <div class="chips" id="chips"></div>
+            <div id="out"><div class="empty">Loading…</div></div>
+        </main>
+    </div>
+    <script src="js/utils.js"></script>
+    <script src="js/events.js"></script>
+</body>
+</html>

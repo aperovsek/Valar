@@ -1,54 +1,33 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Team</title>
-<style>
-:root{--bg:#f6f7f9;--card:#fff;--tx:#14171c;--mu:#6b7280;--bd:#e3e6ea;--ac:#e5484d}
-@media(prefers-color-scheme:dark){:root{--bg:#0f1115;--card:#181b21;--tx:#e8eaee;--mu:#98a0ad;--bd:#272b33}}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.4 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
-main{max-width:900px;margin:auto;padding:16px}a{color:var(--ac)}h1{margin:8px 0 4px}h2{font-size:13px;text-transform:uppercase;letter-spacing:.05em;color:var(--mu);margin:0 0 8px}
-.card{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:12px;margin:12px 0;overflow-x:auto}
-table{border-collapse:collapse;width:100%}td,th{text-align:left;padding:6px 8px;border-bottom:1px solid var(--bd)}th{color:var(--mu);font-weight:600;text-transform:capitalize}
-.k{color:var(--mu);width:35%}.mm{display:flex;gap:8px;padding:5px 0;border-bottom:1px solid var(--bd)}.mm b{margin-left:auto}.mu{color:var(--mu);font-size:13px}
-h1{display:flex;align-items:center;gap:12px}.lg{width:56px;height:56px;object-fit:contain;flex:none}
-</style></head><body><main></head><body><main>
-<a href="/">← Schedule</a><h1 id="h"></h1><div id="body"></div>
-<p class="mu">Team and player data from <a href="https://liquipedia.net/valorant" target="_blank" rel="noopener">Liquipedia</a> (CC-BY-SA 3.0).</p></main>
-<script>
-const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
-const name=new URLSearchParams(location.search).get("name")||"";
-document.getElementById("h").textContent=name;document.title=name;
-const card=(t,inner)=>'<div class="card"><h2>'+esc(t)+'</h2>'+inner+'</div>';
-function table(rows,team){
-  const cols=[...new Set(rows.flatMap(r=>Object.keys(r)))].filter(k=>k!=="page"&&k!=="group");
-  return '<table><tr>'+cols.map(c=>'<th>'+esc(c)+'</th>').join("")+'</tr>'+rows.map(r=>'<tr>'+cols.map(c=>{
-    const v=esc(r[c]||"");
-    return '<td>'+(c==="id"&&r.page?'<a href="player.html?id='+encodeURIComponent(r.page)+'&team='+encodeURIComponent(team)+'">'+v+'</a>':v)+'</td>';
-  }).join("")+'</tr>').join("")+'</table>';
-}
-(async()=>{
-  let h="";
-  const r=await fetch("/api/team/"+encodeURIComponent(name)).catch(()=>null);
-  if(!r)h+=card("Error","<p>Could not reach the server.</p>");
-  else if(!r.ok){
-    const e=await r.json().catch(()=>({}));
-    h+=card("No Liquipedia data",e.error==="no_page"
-      ?"<p>Liquipedia has no page matching this team name.</p>"
-      :'<p>This team has not been imported yet ('+(e.imported||0)+' teams in the data file). Run:</p><p><code>node scrape-liquipedia.js --teams="'+esc(name)+'"</code></p><p class="mu">then reload this page.</p>');
-  }else{
-    const t=await r.json();
-    if(t.v<3)h+=card("Outdated data",'<p>Re-run <code>node scrape-liquipedia.js --teams="'+esc(name)+'"</code> to refresh (adds the logo).</p>');
-    if(t.logoFile)document.getElementById("h").innerHTML='<picture>'+(t.logoDarkFile?'<source media="(prefers-color-scheme: dark)" srcset="'+esc(t.logoDarkFile)+'">':"")+'<img class="lg" src="'+esc(t.logoFile)+'" alt=""></picture><span>'+esc(name)+'</span>';
-    const info=Object.entries(t.info||{});
-    h+=card("Overview",(t.intro?'<p>'+esc(t.intro).replace(/\n\n/g,"</p><p>")+'</p>':"")+(info.length?'<table>'+info.map(([k,v])=>'<tr><td class="k">'+esc(k)+'</td><td>'+esc(v)+'</td></tr>').join("")+'</table>':'<p class="mu">No overview fields found.</p>')+'<p><a href="'+esc(t.url)+'" target="_blank" rel="noopener">Liquipedia page ↗</a></p>');
-    const groups={};(t.players||[]).forEach(p=>(groups[p.group||"Roster"]=groups[p.group||"Roster"]||[]).push(p));
-    h+=Object.keys(groups).length?Object.entries(groups).map(([g,rows])=>card("Player roster · "+g,table(rows,name))).join(""):card("Player roster",'<p class="mu">None found.</p>');
-    const og={};(t.org||[]).forEach(p=>(og[p.group||"Staff"]=og[p.group||"Staff"]||[]).push(p));
-    h+=Object.keys(og).length?Object.entries(og).map(([g,rows])=>card("Organization roster · "+g,table(rows,name))).join(""):card("Organization roster",'<p class="mu">None found.</p>');
-    h+=card("Achievements ("+(t.achievements||[]).length+")",(t.achievements||[]).length?table(t.achievements,name):'<p class="mu">None found.</p>');
-  }
-  try{
-    const d=await (await fetch("/api/matches")).json();
-    const L=d.matches.filter(m=>m.a===name||m.b===name).sort((x,y)=>y.t.localeCompare(x.t)).slice(0,20);
-    if(L.length)h+=card("Recent matches",L.map(m=>'<div class="mm"><span class="mu">'+esc(m.t.replace("T"," "))+'</span><span>'+esc(m.a)+' vs '+esc(m.b)+'</span><b>'+esc(m.sc||"")+'</b></div>').join(""));
-  }catch(e){}
-  document.getElementById("body").innerHTML=h;
-})();
-</script></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Team</title>
+    <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+    <header class="header">
+        <div class="header-top">
+            <h1 id="h">Loading...</h1>
+            <div class="user-actions">
+                <button id="theme-toggle" class="theme-toggle" aria-label="Switch theme"></button>
+                <button id="login-btn" class="user-btn">Login</button>
+            </div>
+        </div>
+        <nav class="navbar">
+            <a href="/" class="nav-tab">Schedule</a>
+            <a href="teams.html" class="nav-tab active">Teams</a>
+            <a href="events.html" class="nav-tab">Events</a>
+        </nav>
+    </header>
+    <div class="wrap">
+        <main class="full-width">
+            <div id="body"><div class="card empty">Loading team data...</div></div>
+            <p class="mt-2 text-center" style="color: var(--text-muted);">Team and player data from <a href="https://liquipedia.net/valorant" target="_blank" rel="noopener">Liquipedia</a> (CC-BY-SA 3.0).</p>
+        </main>
+    </div>
+    <script src="js/utils.js"></script>
+    <script src="js/team.js"></script>
+</body>
+</html>

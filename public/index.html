@@ -1,459 +1,52 @@
 <!doctype html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>Match Schedule</title>
-        <style>
-            :root {
-                --bg: #f6f7f9;
-                --card: #fff;
-                --tx: #14171c;
-                --mu: #6b7280;
-                --bd: #e3e6ea;
-                --ac: #e5484d;
-                --ac2: #fde8e9;
-                --win: #16a34a;
-            }
-            @media (prefers-color-scheme: dark) {
-                :root {
-                    --bg: #0f1115;
-                    --card: #181b21;
-                    --tx: #e8eaee;
-                    --mu: #98a0ad;
-                    --bd: #272b33;
-                    --ac2: #3a1c1e;
-                }
-            }
-            * {
-                box-sizing: border-box;
-            }
-            body {
-                margin: 0;
-                background: var(--bg);
-                color: var(--tx);
-                font:
-                    15px/1.4 system-ui,
-                    -apple-system,
-                    "Segoe UI",
-                    Roboto,
-                    sans-serif;
-            }
-            header {
-                padding: 16px;
-                max-width: 1100px;
-                margin: auto;
-                display: flex;
-                gap: 12px;
-                align-items: center;
-                flex-wrap: wrap;
-            }
-            h1 {
-                font-size: 20px;
-                margin: 0;
-                flex: 1;
-            }
-            h1 small {
-                font-size: 12px;
-                font-weight: 400;
-                color: var(--mu);
-                margin-left: 8px;
-            }
-            .tabs button,
-            .btn {
-                background: var(--card);
-                color: var(--tx);
-                border: 1px solid var(--bd);
-                padding: 7px 14px;
-                border-radius: 8px;
-                cursor: pointer;
-                font: inherit;
-            }
-            .tabs button.on {
-                background: var(--ac);
-                border-color: var(--ac);
-                color: #fff;
-            }
-            .wrap {
-                max-width: 1100px;
-                margin: auto;
-                padding: 0 16px 40px;
-                display: grid;
-                grid-template-columns: 280px 1fr;
-                gap: 16px;
-            }
-            @media (max-width: 760px) {
-                .wrap {
-                    grid-template-columns: 1fr;
-                }
-            }
-            .panel {
-                background: var(--card);
-                border: 1px solid var(--bd);
-                border-radius: 12px;
-                padding: 12px;
-                margin-bottom: 12px;
-            }
-            .panel h2 {
-                font-size: 13px;
-                text-transform: uppercase;
-                letter-spacing: 0.05em;
-                color: var(--mu);
-                margin: 0 0 8px;
-                display: flex;
-                justify-content: space-between;
-            }
-            .panel a {
-                color: var(--ac);
-            }
-            input[type="search"] {
-                width: 100%;
-                padding: 7px 9px;
-                border: 1px solid var(--bd);
-                border-radius: 8px;
-                background: var(--bg);
-                color: var(--tx);
-                font: inherit;
-            }
-            .list {
-                max-height: 240px;
-                overflow: auto;
-                margin-top: 8px;
-            }
-            .list label {
-                display: flex;
-                gap: 8px;
-                align-items: center;
-                padding: 3px 2px;
-                cursor: pointer;
-            }
-            .list .n {
-                margin-left: auto;
-                color: var(--mu);
-                font-size: 12px;
-            }
-            .day {
-                font-size: 13px;
-                color: var(--mu);
-                margin: 16px 4px 6px;
-                font-weight: 600;
-            }
-            .m {
-                background: var(--card);
-                border: 1px solid var(--bd);
-                border-radius: 10px;
-                display: grid;
-                grid-template-columns: 52px 1fr 64px 1fr;
-                gap: 8px;
-                align-items: center;
-                padding: 10px 12px;
-                margin-bottom: 6px;
-                color: inherit;
-                text-decoration: none;
-            }
-            .tm a {
-                color: inherit;
-                text-decoration: none;
-            }
-            .tm a:hover {
-                color: var(--ac);
-            }
-            .ev a {
-                color: var(--mu);
-            }
-            .lg {
-                width: 24px;
-                height: 24px;
-                object-fit: contain;
-                flex: none;
-            }
-            .ph {
-                display: inline-flex;
-                align-items: center;
-                justify-content: center;
-                background: var(--bd);
-                color: var(--mu);
-                border-radius: 6px;
-                font-size: 12px;
-                font-weight: 700;
-            }
-            .tm a {
-                display: inline-flex;
-                align-items: center;
-                gap: 8px;
-            }
-            .tm.r {
-                display: flex;
-                justify-content: flex-end;
-            }
-            .tm.r a {
-                flex-direction: row-reverse;
-            }
-            .t {
-                color: var(--mu);
-                font-size: 13px;
-            }
-            .tm {
-                font-weight: 600;
-            }
-            .tm.r {
-                text-align: right;
-            }
-            .tm.w {
-                color: var(--win);
-            }
-            .sc {
-                text-align: center;
-                font-weight: 700;
-            }
-            .live {
-                color: var(--ac);
-            }
-            .ev {
-                grid-column: 2/5;
-                color: var(--mu);
-                font-size: 12px;
-            }
-            .chips {
-                display: flex;
-                gap: 6px;
-                flex-wrap: wrap;
-                margin-bottom: 8px;
-            }
-            .chip {
-                background: var(--ac2);
-                color: var(--ac);
-                border-radius: 99px;
-                padding: 2px 10px;
-                font-size: 13px;
-                cursor: pointer;
-            }
-            .empty {
-                padding: 30px;
-                text-align: center;
-                color: var(--mu);
-            }
-        </style>
-    </head>
-    <body>
-        <header>
-            <h1>Match Schedule<small id="upd"></small></h1>
-            <div class="tabs">
-                <button id="tu" class="on">Upcoming</button>
-                <button id="tr">Results</button>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>VALORANT Match Schedule</title>
+    <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+    <header class="header">
+        <div class="header-top">
+            <h1>VALORANT <small>Match Schedule</small></h1>
+            <div class="user-actions">
+                <button id="theme-toggle" class="theme-toggle" aria-label="Switch theme"></button>
+                <button id="login-btn" class="user-btn">Login</button>
             </div>
-            <button class="btn" id="rf">Refresh</button>
-        </header>
-        <div class="wrap">
-            <aside>
-                <div class="panel">
-                    <h2>Events <a href="#" id="ce">clear</a></h2>
-                    <input type="search" id="se" placeholder="Search events" />
-                    <div class="list" id="le"></div>
-                </div>
-                <div class="panel">
-                    <h2>Teams <a href="#" id="ct">clear</a></h2>
-                    <input type="search" id="st" placeholder="Search teams" />
-                    <div class="list" id="lt"></div>
-                </div>
-            </aside>
-            <main>
-                <div class="chips" id="chips"></div>
-                <div id="out"><div class="empty">Loading…</div></div>
-            </main>
         </div>
-        <script>
-            const $ = (id) => document.getElementById(id);
-            const esc = (s) =>
-                String(s).replace(
-                    /[&<>"]/g,
-                    (c) =>
-                        ({
-                            "&": "&amp;",
-                            "<": "&lt;",
-                            ">": "&gt;",
-                            '"': "&quot;",
-                        })[c],
-                );
-            let M = [],
-                LG = {},
-                view = "upcoming";
-            function logo(n) {
-                const l = LG[n];
-                if (!l)
-                    return `<span class="lg ph">${esc((n || "?")[0])}</span>`;
-                return `<picture>${l.d ? `<source media="(prefers-color-scheme: dark)" srcset="${esc(l.d)}">` : ""}<img class="lg" src="${esc(l.l)}" alt="" loading="lazy"></picture>`;
-            }
-            const selE = new Set(),
-                selT = new Set();
-            const FKEY = "schedule.filters";
-            function saveFilters() {
-                try {
-                    localStorage.setItem(
-                        FKEY,
-                        JSON.stringify({ view, e: [...selE], t: [...selT] }),
-                    );
-                } catch (e) {}
-            }
-            try {
-                const f = JSON.parse(localStorage.getItem(FKEY) || "{}");
-                if (f.view === "upcoming" || f.view === "results")
-                    view = f.view;
-                (f.e || []).forEach((k) => selE.add(k));
-                (f.t || []).forEach((k) => selT.add(k));
-            } catch (e) {}
-
-            async function load() {
-                try {
-                    const r = await fetch("/api/matches");
-                    if (!r.ok) throw new Error(r.status);
-                    const d = await r.json();
-                    M = d.matches;
-                    $("upd").textContent =
-                        "updated " + new Date(d.updated).toLocaleTimeString();
-                } catch (e) {
-                    $("out").innerHTML =
-                        '<div class="empty">Could not load data.</div>';
-                    return;
-                }
-                render();
-            }
-            function counts(f) {
-                const o = {};
-                M.forEach((m) =>
-                    f(m).forEach((k) => {
-                        if (k && k !== "TBD") o[k] = (o[k] || 0) + 1;
-                    }),
-                );
-                return o;
-            }
-            function facet(id, q, sel, o) {
-                const el = $(id);
-                el.innerHTML =
-                    Object.keys(o)
-                        .sort()
-                        .filter((k) =>
-                            k.toLowerCase().includes(q.toLowerCase()),
-                        )
-                        .map(
-                            (k) =>
-                                `<label><input type="checkbox" data-k="${esc(k)}" ${sel.has(k) ? "checked" : ""}>${esc(k)}<span class="n">${o[k]}</span></label>`,
-                        )
-                        .join("") || '<div class="t">None</div>';
-                el.querySelectorAll("input").forEach(
-                    (c) =>
-                        (c.onchange = () => {
-                            c.checked
-                                ? sel.add(c.dataset.k)
-                                : sel.delete(c.dataset.k);
-                            render();
-                        }),
-                );
-            }
-            function render() {
-                saveFilters();
-                facet(
-                    "le",
-                    $("se").value,
-                    selE,
-                    counts((m) => [m.e]),
-                );
-                facet(
-                    "lt",
-                    $("st").value,
-                    selT,
-                    counts((m) => [m.a, m.b]),
-                );
-                const up = view === "upcoming";
-                const L = M.filter((m) =>
-                    up ? m.status !== "Completed" : m.status === "Completed",
-                )
-                    .filter(
-                        (m) =>
-                            (!selE.size || selE.has(m.e)) &&
-                            (!selT.size || selT.has(m.a) || selT.has(m.b)),
-                    )
-                    .sort((x, y) =>
-                        up ? x.t.localeCompare(y.t) : y.t.localeCompare(x.t),
-                    );
-                $("chips").innerHTML =
-                    [...selE]
-                        .map(
-                            (k) =>
-                                `<span class="chip" data-g="e" data-k="${esc(k)}">${esc(k)} ×</span>`,
-                        )
-                        .join("") +
-                    [...selT]
-                        .map(
-                            (k) =>
-                                `<span class="chip" data-g="t" data-k="${esc(k)}">${esc(k)} ×</span>`,
-                        )
-                        .join("");
-                $("chips")
-                    .querySelectorAll(".chip")
-                    .forEach(
-                        (x) =>
-                            (x.onclick = () => {
-                                (x.dataset.g === "e" ? selE : selT).delete(
-                                    x.dataset.k,
-                                );
-                                render();
-                            }),
-                    );
-                let h = "",
-                    last = "";
-                for (const m of L) {
-                    const day = m.t.slice(0, 10);
-                    if (day !== last) {
-                        last = day;
-                        h += `<div class="day">${esc(new Date(day + "T12:00").toLocaleDateString(undefined, { weekday: "long", month: "long", day: "numeric", year: "numeric" }))}</div>`;
-                    }
-                    const s = m.sc ? m.sc.split("-").map(Number) : null;
-                    h += `<div class="m"><div class="t">${esc(m.t.slice(11))}</div>
-      <div class="tm r ${s && s[0] > s[1] ? "w" : ""}"><a href="team.html?name=${encodeURIComponent(m.a)}">${logo(m.a)}<span>${esc(m.a)}</span></a></div>
-      <div class="sc ${m.status === "LIVE" ? "live" : ""}">${m.status === "LIVE" ? "LIVE" : s ? s[0] + " : " + s[1] : "vs"}</div>
-      <div class="tm ${s && s[1] > s[0] ? "w" : ""}"><a href="team.html?name=${encodeURIComponent(m.b)}">${logo(m.b)}<span>${esc(m.b)}</span></a></div>
-      <div class="ev">${esc(m.e)}${m.s ? " · " + esc(m.s) : ""} · <a href="${esc(m.url)}" target="_blank" rel="noopener">vlr.gg ↗</a></div></div>`;
-                }
-                $("out").innerHTML =
-                    h ||
-                    '<div class="empty">No matches for these filters.</div>';
-            }
-            $("tu").onclick = () => {
-                view = "upcoming";
-                $("tu").className = "on";
-                $("tr").className = "";
-                render();
-            };
-            $("tr").onclick = () => {
-                view = "results";
-                $("tr").className = "on";
-                $("tu").className = "";
-                render();
-            };
-            $("se").oninput = $("st").oninput = render;
-            $("ce").onclick = (e) => {
-                e.preventDefault();
-                selE.clear();
-                render();
-            };
-            $("ct").onclick = (e) => {
-                e.preventDefault();
-                selT.clear();
-                render();
-            };
-            $("rf").onclick = load;
-            fetch("/api/logos")
-                .then((r) => r.json())
-                .then((d) => {
-                    LG = d;
-                    if (M.length) render();
-                })
-                .catch(() => {});
-            $("tu").className = view === "upcoming" ? "on" : "";
-            $("tr").className = view === "results" ? "on" : "";
-            load();
-            setInterval(load, 2 * 60 * 1000);
-        </script>
-    </body>
+        <nav class="navbar">
+            <a href="/" class="nav-tab active">Schedule</a>
+            <a href="teams.html" class="nav-tab">Teams</a>
+            <a href="events.html" class="nav-tab">Events</a>
+        </nav>
+    </header>
+    <div class="wrap">
+        <aside>
+            <div class="panel">
+                <h2>Events <a href="#" id="ce">clear</a></h2>
+                <input type="search" id="se" placeholder="Search events..." />
+                <div class="list" id="le"></div>
+            </div>
+            <div class="panel">
+                <h2>Teams <a href="#" id="ct">clear</a></h2>
+                <input type="search" id="st" placeholder="Search teams..." />
+                <div class="list" id="lt"></div>
+            </div>
+        </aside>
+        <main>
+            <div class="page-toolbar">
+                <div class="tabs">
+                    <button id="tu" class="on">Upcoming</button>
+                    <button id="tr">Results</button>
+                </div>
+                <button class="btn btn-primary" id="rf">Refresh</button>
+            </div>
+            <div class="chips" id="chips"></div>
+            <div id="out"><div class="empty">Loading...</div></div>
+        </main>
+    </div>
+    <script src="js/utils.js"></script>
+    <script src="js/schedule.js"></script>
+</body>
 </html>
