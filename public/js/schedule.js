@@ -52,23 +52,28 @@ function counts(f) {
 function facet(id, q, sel, o, isEvent) {
     const el = $(id);
     if (!el) return;
-    
+
     // Ensure logo functions are available
     if (typeof logo !== 'function' || typeof eventLogo !== 'function') {
         console.error('Logo functions not available');
         return;
     }
-    
+
     // Get the container for the list content
     let content = el.querySelector('.list-content');
+    const searchId = id === "le" ? "se" : "st";
+    const placeholder = id === "le" ? "Search events..." : "Search teams...";
     if (!content) {
-        // Create the collapsible list structure if it doesn't exist
+        // Create the collapsible list structure if it doesn't exist.
+        // The search input lives inside the collapsible area, above the list.
         el.innerHTML = `
             <div class="list-header" data-target="${id}-content">
                 <span class="list-title">${isEvent ? 'Events' : 'Teams'}</span>
                 <span class="list-toggle">▼</span>
             </div>
             <div class="list-content" id="${id}-content">
+                <div class="list-search"><input type="search" id="${searchId}" placeholder="${placeholder}" /></div>
+                <div class="list-items">
                 ${Object.keys(o)
                     .sort()
                     .filter(k => k.toLowerCase().includes(q.toLowerCase()))
@@ -82,6 +87,7 @@ function facet(id, q, sel, o, isEvent) {
                             </div>
                         `;
                     }).join("") || '<div class="empty">None</div>'}
+                </div>
             </div>
         `;
         
@@ -89,21 +95,23 @@ function facet(id, q, sel, o, isEvent) {
         const header = el.querySelector('.list-header');
         const toggle = header.querySelector('.list-toggle');
         const contentEl = el.querySelector('.list-content');
-        
+        const searchInput = el.querySelector('#' + searchId);
+        if (searchInput) searchInput.oninput = render;
+
         // Check if the list should be collapsed by default
         const shouldCollapse = localStorage.getItem(`filter-${id}-collapsed`) === 'true';
         if (shouldCollapse) {
             contentEl.classList.add('collapsed');
             toggle.textContent = '▶';
         }
-        
+
         header.onclick = () => {
             contentEl.classList.toggle('collapsed');
             toggle.textContent = contentEl.classList.contains('collapsed') ? '▶' : '▼';
             // Save the collapsed state
             localStorage.setItem(`filter-${id}-collapsed`, contentEl.classList.contains('collapsed') ? 'true' : 'false');
         };
-        
+
         // Add click handlers for list items
         el.querySelectorAll('.list-item').forEach(item => {
             item.onclick = () => {
@@ -120,7 +128,8 @@ function facet(id, q, sel, o, isEvent) {
         });
     } else {
         // Update existing list content
-        content.innerHTML = Object.keys(o)
+        const items = content.querySelector('.list-items');
+        if (items) items.innerHTML = Object.keys(o)
             .sort()
             .filter(k => k.toLowerCase().includes(q.toLowerCase()))
             .map(k => {
@@ -133,8 +142,6 @@ function facet(id, q, sel, o, isEvent) {
                     </div>
                 `;
             }).join("") || '<div class="empty">None</div>';
-        
-        // Update click handlers for list items
         el.querySelectorAll('.list-item').forEach(item => {
             item.onclick = () => {
                 const key = item.dataset.k;
@@ -158,28 +165,28 @@ function render() {
         $("out").innerHTML = '<div class="empty">Loading matches...</div>';
         return;
     }
-    
+
     // Only render if we have data
     if (M.length === 0 && pendingLoads === 0) {
         $("out").innerHTML = '<div class="empty">No matches found.</div>';
         return;
     }
-    
+
     // Ensure logo functions are available
     if (typeof logo !== 'function' || typeof eventLogo !== 'function') {
         console.error('Logo functions not available');
         return;
     }
-    
+
     saveFilters();
-    facet("le", $("se").value, selE, counts(m => [m.e]), true); // true for events
-    facet("lt", $("st").value, selT, counts(m => [m.a, m.b]), false); // false for teams
-    
+    facet("le", $("se") ? $("se").value : "", selE, counts(m => [m.e]), true); // true for events
+    facet("lt", $("st") ? $("st").value : "", selT, counts(m => [m.a, m.b]), false); // false for teams
+
     const up = view === "upcoming";
     const L = M.filter(m => up ? m.status !== "Completed" : m.status === "Completed")
         .filter(m => (!selE.size || selE.has(m.e)) && (!selT.size || selT.has(m.a) || selT.has(m.b)))
         .sort((x, y) => up ? x.t.localeCompare(y.t) : y.t.localeCompare(x.t));
-    
+
     // Render chips
     $("chips").innerHTML = [...selE].map(k => {
         const logoHtml = eventLogo(k);
@@ -189,12 +196,12 @@ function render() {
         const logoHtml = logo(k);
         return `<span class="chip" data-g="t" data-k="${esc(k)}">${logoHtml}<span class="chip-name">${esc(k)}</span> ×</span>`;
     }).join("");
-    
+
     $("chips").querySelectorAll(".chip").forEach(x => (x.onclick = () => {
         (x.dataset.g === "e" ? selE : selT).delete(x.dataset.k);
         render();
     }));
-    
+
     // Render matches
     let h = "", last = "";
     for (const m of L) {
@@ -205,13 +212,14 @@ function render() {
         }
         const s = m.sc ? m.sc.split("-").map(Number) : null;
         h += `<div class="m"><div class="t">${esc(m.t.slice(11))}</div>
-            <div class="tm r ${s && s[0] > s[1] ? "w" : ""}"><a href="team.html?name=${encodeURIComponent(m.a)}">${logo(m.a)}<span>${esc(m.a)}</span></a></div>
+            <div class="tm r ${s && s[0] > s[1] ? "w" : ""}"><a href="team.html?name=${encodeURIComponent(m.a)}">${logo(m.a)}<span>${esc(m.a)}</span>${s ? `<span class="tsc">${s[0]}</span>` : ""}</a></div>
             <div class="sc ${m.status === "LIVE" ? "live" : ""}">${m.status === "LIVE" ? "LIVE" : s ? s[0] + " : " + s[1] : "vs"}</div>
-            <div class="tm ${s && s[1] > s[0] ? "w" : ""}"><a href="team.html?name=${encodeURIComponent(m.b)}">${logo(m.b)}<span>${esc(m.b)}</span></a></div>
-            <div class="ev">${eventLogo(m.e)} <a href="event.html?name=${encodeURIComponent(m.e)}">${esc(m.e)}</a>${m.s ? " · " + esc(m.s) : ""} · <a href="${esc(m.url)}" target="_blank" rel="noopener">vlr.gg ↗</a></div></div>`;
+            <div class="tm ${s && s[1] > s[0] ? "w" : ""}"><a href="team.html?name=${encodeURIComponent(m.b)}">${logo(m.b)}<span>${esc(m.b)}</span>${s ? `<span class="tsc">${s[1]}</span>` : ""}</a></div>
+            <div class="evl">${eventLogo(m.e)}</div>
+            <div class="ev"><a href="event.html?name=${encodeURIComponent(m.e)}">${esc(m.e)}</a>${m.s ? " · " + esc(m.s) : ""} · <a href="${esc(m.url)}" target="_blank" rel="noopener">vlr.gg ↗</a></div></div>`;
     }
     $("out").innerHTML = h || '<div class="empty">No matches for these filters.</div>';
-    
+
     isInitialLoad = false;
 }
 
@@ -219,10 +227,10 @@ function render() {
 async function load() {
     pendingLoads = 3;
     isInitialLoad = true;
-    
+
     // Show loading state immediately
     $("out").innerHTML = '<div class="empty">Loading matches...</div>';
-    
+
     try {
         const r = await fetch("/api/matches");
         if (!r.ok) throw new Error(r.status);
@@ -235,7 +243,7 @@ async function load() {
         pendingLoads--;
         if (pendingLoads === 0) render();
     }
-    
+
     try {
         const r = await fetch("/api/logos");
         if (r.ok) {
@@ -248,7 +256,7 @@ async function load() {
         pendingLoads--;
         if (pendingLoads === 0) render();
     }
-    
+
     try {
         const r = await fetch("/api/event-logos");
         if (r.ok) {
@@ -266,34 +274,11 @@ async function load() {
 // Initialize
 $("tu").onclick = () => { view = "upcoming"; $("tu").className = "on"; $("tr").className = ""; render(); };
 $("tr").onclick = () => { view = "results"; $("tr").className = "on"; $("tu").className = ""; render(); };
-$("se").oninput = $("st").oninput = render;
+// Note: the #se/#st search inputs are created inside facet() during render(),
+// so their oninput handlers are attached there — not here.
 $("ce").onclick = (e) => { e.preventDefault(); selE.clear(); render(); };
 $("ct").onclick = (e) => { e.preventDefault(); selT.clear(); render(); };
 $("rf").onclick = load;
-
-// Add search icons and clear buttons
-const searchInputs = ["se", "st"].map(id => $(id));
-searchInputs.forEach(input => {
-    if (input) {
-        // Add search icon
-        const icon = document.createElement('span');
-        icon.className = 'search-icon';
-        icon.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>';
-        input.parentNode.insertBefore(icon, input);
-        
-        // Add clear button
-        const clearBtn = document.createElement('span');
-        clearBtn.className = 'search-clear';
-        clearBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>';
-        input.parentNode.appendChild(clearBtn);
-        
-        // Clear button handler
-        clearBtn.onclick = () => {
-            input.value = '';
-            render();
-        };
-    }
-});
 
 // Set initial tab state
 $("tu").className = view === "upcoming" ? "on" : "";
